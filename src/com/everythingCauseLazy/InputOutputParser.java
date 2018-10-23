@@ -46,7 +46,7 @@ public class InputOutputParser {
 			String operation = "";
 			
 			// Regex to match the required functions
-			String operatorMatchPattern = "\\[(add|subtract|multiply|karatsuba|euclid|inverse|reduce)\\]";
+			String operatorMatchPattern = "\\[(add-poly|subtract-poly|multiply|long-div-poly|equals-poly-mod|inverse|reduce)\\]";
 			
 		    while ((line = bf.readLine()) != null) {
      
@@ -102,13 +102,30 @@ public class InputOutputParser {
 			
 			try {
 				switch(operation) {
-				case "add":
+				case "add-poly":
 					int[] o = BigPolyCalculator.add(stringToArray(poly1), stringToArray(poly2), modulus);
 					outputArray(o);
 					break;
+				case "subtract-poly":
+					int[] ot = BigPolyCalculator.sub(stringToArray(poly1), stringToArray(poly2), modulus);
+					outputArray(ot);
+					break;
+				case "long-div-poly":
+					int[][] ott = BigPolyCalculator.longPolyDivision(stringToArray(poly1), stringToArray(poly2), modulus);
+					outputArray(ott[0]);
+					System.out.println("En de remainder: ");
+					outputArray(ott[1]);
+					
+					break;
+				case "equals-poly-mod":
+					
+					boolean ottt = BigPolyCalculator.equalsPolyMod(stringToArray(poly1), stringToArray(poly2), stringToArray(poly3));
+					System.out.println("De polynimals zijn equal mod poly3: " + ottt);
+					
+					break;
 				}
 			}catch(Exception ex) {
-				System.out.println("There's a number bigger than the specified radix! Could not perform the desired calculation!");
+				System.out.println("ERROR! " + ex);
 				error = true;
 			}	
 			
@@ -153,7 +170,7 @@ public class InputOutputParser {
 	
 	public int[] stringToArray(String n1) {
 		
-		int[] output = new int[(int)Math.ceil((n1.length() - 2)/2)];
+		int[] output = new int[(int)Math.ceil((double)(n1.length() - 2)/2)];
 		int index = 0;
 		
 		for(int i = 1; i < n1.length() - 1; i++) {
