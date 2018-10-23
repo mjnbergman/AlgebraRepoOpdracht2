@@ -46,7 +46,7 @@ public class InputOutputParser {
 			String operation = "";
 			
 			// Regex to match the required functions
-			String operatorMatchPattern = "\\[(add|subtract|multiply|karatsuba|euclid|inverse|reduce)\\]";
+			String operatorMatchPattern = "\\[(add-poly|subtract-poly|multiply|long-div-poly|equals-poly-mod|inverse|reduce)\\]";
 			
 		    while ((line = bf.readLine()) != null) {
      
@@ -102,7 +102,7 @@ public class InputOutputParser {
 			
 			//try {
 				switch(operation) {
-				case "add":
+				case "add-poly":
 					int[] o = BigPolyCalculator.add(stringToArray(poly1), stringToArray(poly2), modulus);
 					outputArray(o);
 					break;
@@ -110,13 +110,30 @@ public class InputOutputParser {
 					int[] p = BigPolyCalculator.multiply(stringToArray(poly1), stringToArray(poly2), modulus);
 					outputArray(p);
 					break;
+				case "subtract-poly":
+					int[] ot = BigPolyCalculator.sub(stringToArray(poly1), stringToArray(poly2), modulus);
+					outputArray(ot);
+					break;
+				case "long-div-poly":
+					int[][] ott = BigPolyCalculator.longPolyDivision(stringToArray(poly1), stringToArray(poly2), modulus);
+					outputArray(ott[0]);
+					System.out.println("En de remainder: ");
+					outputArray(ott[1]);
+					
+					break;
+				case "equals-poly-mod":
+					
+					boolean ottt = BigPolyCalculator.equalsPolyMod(stringToArray(poly1), stringToArray(poly2), stringToArray(poly3));
+					System.out.println("De polynimals zijn equal mod poly3: " + ottt);
+					
+					break;
 				}
 			//}catch(Exception ex) {
-			//	System.out.println(ex);
-			//	error = true;
+				//System.out.println("ERROR! " + ex);
+				//error = true;
 			//}	
 			
-			this.outputData(pod, error);
+			//this.outputData(pod, error);
 			
 				
 		} catch(IOException ex) {
