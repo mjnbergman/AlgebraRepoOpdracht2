@@ -47,10 +47,11 @@ public class BigPolyCalculator {
 	public static int[] multiply(int[] p1, int[] p2, int mod) {
 		int indent = 0;
 		int[] result = new int[p1.length + p2.length - 1];
-		System.out.println("p1 = " + Arrays.toString(p1));
+		
 		p1 = reverseInt(p1);
 		p2 = reverseInt(p2);
-		
+		System.out.println("p1 = " + Arrays.toString(p1));
+		System.out.println("p2 = " + Arrays.toString(p2));
 		for(int i = 0; i < p2.length; i++) {
 			int[] currentAdd = new int[p1.length + indent];
 			for(int c = 0; c < indent; c++) {
@@ -59,13 +60,15 @@ public class BigPolyCalculator {
 			for(int p = 0; p < p1.length; p++) {
 				currentAdd[p + indent] = p1[p] * p2[i];
 			}
+			currentAdd = reverseInt(currentAdd);
+			System.out.println("currentAdd= " + Arrays.toString(currentAdd) + " and result is currently: " + Arrays.toString(result));
 			result = add(result, currentAdd, mod);
-			
+			System.out.println("result is currently: " + Arrays.toString(result));
 			indent++;
 		}
 		
 		
-		return reverseInt(result);
+		return result;
 	}
 	
 	public static int[] reverseInt(int[] array) {
