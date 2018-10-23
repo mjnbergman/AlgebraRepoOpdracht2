@@ -1,5 +1,7 @@
 package com.everythingCauseLazy;
 
+import java.util.Arrays;
+
 public class BigPolyCalculator {
 
 	public static final String ADD_COUNT = null;
@@ -40,6 +42,41 @@ public class BigPolyCalculator {
 		
 		return moduloPoly(output, mod);
 	}
+	
+	
+	public static int[] multiply(int[] p1, int[] p2, int mod) {
+		int indent = 0;
+		int[] result = new int[p1.length + p2.length - 1];
+		System.out.println("p1 = " + Arrays.toString(p1));
+		p1 = reverseInt(p1);
+		p2 = reverseInt(p2);
+		
+		for(int i = 0; i < p2.length; i++) {
+			int[] currentAdd = new int[p1.length + indent];
+			for(int c = 0; c < indent; c++) {
+				currentAdd[c] = 0;
+			}
+			for(int p = 0; p < p1.length; p++) {
+				currentAdd[p + indent] = p1[p] * p2[i];
+			}
+			result = add(result, currentAdd, mod);
+			
+			indent++;
+		}
+		
+		
+		return reverseInt(result);
+	}
+	
+	public static int[] reverseInt(int[] array) {
+		for(int i=0; i<array.length/2; i++){
+			  int temp = array[i];
+			  array[i] = array[array.length -i -1];
+			  array[array.length -i -1] = temp;
+		}
+		return array;
+	}
+	
 	public static int[] moduloPoly(int[] poly, int mod) {
 		
 		int[] output = new int[poly.length];

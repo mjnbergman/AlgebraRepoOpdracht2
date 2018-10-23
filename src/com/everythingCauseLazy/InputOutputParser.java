@@ -73,14 +73,14 @@ public class InputOutputParser {
 		        
 		    }
 		    
-			System.out.println("De radix is: " + radix);
+			//System.out.println("De radix is: " + radix);
 			System.out.println("Het eerste getal is: " + poly1);
 			System.out.println("Het tweede getal is: " + poly2);
-			System.out.println("Het tweede getal is: " + poly3);
+			//System.out.println("Het tweede getal is: " + poly3);
 			System.out.println("De modulus is: " + modulus);
 			System.out.println("De operatie is: " + operation);
 			
-			System.out.print("De array vorm van getal 1 is: ");
+			//System.out.print("De array vorm van getal 1 is: ");
 		//	outputArray(stringToArray(poly1));
 			
 			// Compile the found data into a ParsedInputData object for ease of use.
@@ -100,17 +100,21 @@ public class InputOutputParser {
 			// Also catches any exceptions caused by for instance a digit in one of the input number being
 			// bigger than the radix.
 			
-			try {
+			//try {
 				switch(operation) {
 				case "add":
 					int[] o = BigPolyCalculator.add(stringToArray(poly1), stringToArray(poly2), modulus);
 					outputArray(o);
 					break;
+				case "multiply":
+					int[] p = BigPolyCalculator.multiply(stringToArray(poly1), stringToArray(poly2), modulus);
+					outputArray(p);
+					break;
 				}
-			}catch(Exception ex) {
-				System.out.println("There's a number bigger than the specified radix! Could not perform the desired calculation!");
-				error = true;
-			}	
+			//}catch(Exception ex) {
+			//	System.out.println(ex);
+			//	error = true;
+			//}	
 			
 			this.outputData(pod, error);
 			
@@ -142,7 +146,7 @@ public class InputOutputParser {
 			// no need to close it.
 			//bw.close();
 
-			System.out.println("Done");
+			//System.out.println("Done");
 
 		} catch (IOException e) {
 
@@ -151,22 +155,24 @@ public class InputOutputParser {
 		}
 	}
 	
-	public int[] stringToArray(String n1) {
-		
-		int[] output = new int[(int)Math.ceil((n1.length() - 2)/2)];
+	public static int[] stringToArray(String n1) {
+		//System.out.println("n1 first = " + n1.replaceAll("\\{", "").replaceAll("\\}", ""));
+		n1 = n1.replaceAll("\\{", "").replaceAll("\\}", "");
+		//System.out.println("output length = " + (int) Math.ceil((n1.length())/2.0));
+		int[] output = new int[(int)Math.ceil((n1.length())/2.0)];
 		int index = 0;
 		
-		for(int i = 1; i < n1.length() - 1; i++) {
+		for(int i = 0; i < n1.length(); i++) {
 			if(n1.charAt(i) != ',' && n1.charAt(i) != ' ') {
+				//System.out.println("n1.charAt = " + n1.charAt(i) + " and output[i] = " + (int) (n1.charAt(i) - 48));
 				output[index] = (int) n1.charAt(i) - 48;
 				index++;
 			}
 		}
-		
 		return output;
 	}
 	
-	public void outputArray(int[] array) {
+	public static void outputArray(int[] array) {
 		for(int i = 0; i < array.length; i++) {
 			System.out.println(array[i]);
 		}
