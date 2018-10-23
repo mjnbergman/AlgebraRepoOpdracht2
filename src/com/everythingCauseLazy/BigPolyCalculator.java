@@ -13,7 +13,7 @@ public class BigPolyCalculator {
 		int counter = 0;
 		int index = 0;
 	
-		System.out.println("De lengtes zijn " + p1.length + " en " + p2.length) ;
+		//System.out.println("De lengtes zijn " + p1.length + " en " + p2.length) ;
 		if(p2.length > p1.length) {
 			int[] p3 = p1;
 			p1 = p2;
@@ -38,7 +38,7 @@ public class BigPolyCalculator {
 			}
 			
 			output[i] = tDigit + p1[i];
-			System.out.println("De output is " + output[i] + " bij " + tDigit + " + " + p1[i]);
+			//System.out.println("De output is " + output[i] + " bij " + tDigit + " + " + p1[i]);
 		}
 		
 		return moduloPoly(output, mod);
@@ -51,8 +51,8 @@ public class BigPolyCalculator {
 		
 		p1 = reverseInt(p1);
 		p2 = reverseInt(p2);
-		System.out.println("p1 = " + Arrays.toString(p1));
-		System.out.println("p2 = " + Arrays.toString(p2));
+		//System.out.println("p1 = " + Arrays.toString(p1));
+		//System.out.println("p2 = " + Arrays.toString(p2));
 		for(int i = 0; i < p2.length; i++) {
 			int[] currentAdd = new int[p1.length + indent];
 			for(int c = 0; c < indent; c++) {
@@ -62,9 +62,9 @@ public class BigPolyCalculator {
 				currentAdd[p + indent] = p1[p] * p2[i];
 			}
 			currentAdd = reverseInt(currentAdd);
-			System.out.println("currentAdd= " + Arrays.toString(currentAdd) + " and result is currently: " + Arrays.toString(result));
+			//System.out.println("currentAdd= " + Arrays.toString(currentAdd) + " and result is currently: " + Arrays.toString(result));
 			result = add(result, currentAdd, mod);
-			System.out.println("result is currently: " + Arrays.toString(result));
+			//System.out.println("result is currently: " + Arrays.toString(result));
 			indent++;
 		}
 		

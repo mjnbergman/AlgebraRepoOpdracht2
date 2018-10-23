@@ -104,21 +104,21 @@ public class InputOutputParser {
 				switch(operation) {
 				case "add-poly":
 					int[] o = BigPolyCalculator.add(stringToArray(poly1), stringToArray(poly2), modulus);
-					outputArray(o);
+					printPoly(o);
 					break;
 				case "multiply":
 					int[] p = BigPolyCalculator.multiply(stringToArray(poly1), stringToArray(poly2), modulus);
-					outputArray(p);
+					printPoly(p);
 					break;
 				case "subtract-poly":
 					int[] ot = BigPolyCalculator.sub(stringToArray(poly1), stringToArray(poly2), modulus);
-					outputArray(ot);
+					printPoly(ot);
 					break;
 				case "long-div-poly":
 					int[][] ott = BigPolyCalculator.longPolyDivision(stringToArray(poly1), stringToArray(poly2), modulus);
-					outputArray(ott[0]);
+					printPoly(ott[0]);
 					System.out.println("En de remainder: ");
-					outputArray(ott[1]);
+					printPoly(ott[1]);
 					
 					break;
 				case "equals-poly-mod":
@@ -193,5 +193,36 @@ public class InputOutputParser {
 		for(int i = 0; i < array.length; i++) {
 			System.out.println(array[i]);
 		}
+	}
+	
+	public static void printPoly(int[] poly) {
+		String result = "";
+		int degree = poly.length - 1;
+		for(int i = 0; i < poly.length; i++) {
+			if(poly[i] != 0) {
+				if(i != 0) {
+					if(poly[i] < 0) {
+						result += "-";
+					}
+					else {
+						result += "+";
+					}
+				}
+				if(Math.abs(poly[i]) != 1 || degree == 0) {
+					result += Math.abs(poly[i]);
+				}
+				if(degree != 0 && degree != 1) {
+					result += "X^" + degree;
+				}
+				else if(degree == 1) {
+					result += "X";
+				}
+			}
+			degree--;
+		}
+		if(result == "") {
+			result = "0";
+		}
+		System.out.println(result);
 	}
 }
