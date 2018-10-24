@@ -176,22 +176,30 @@ public class InputOutputParser {
 		//System.out.println("n1 first = " + n1.replaceAll("\\{", "").replaceAll("\\}", ""));
 		n1 = n1.replaceAll("\\{", "").replaceAll("\\}", "");
 		//System.out.println("output length = " + (int) Math.ceil((n1.length())/2.0));
-		int[] output = new int[(int)Math.ceil((n1.length())/2.0)];
+		
 		int index = 0;
 		
-		for(int i = 0; i < n1.length(); i++) {
-			if(n1.charAt(i) != ',' && n1.charAt(i) != ' ') {
-				//System.out.println("n1.charAt = " + n1.charAt(i) + " and output[i] = " + (int) (n1.charAt(i) - 48));
-				output[index] = (int) n1.charAt(i) - 48;
-				index++;
-			}
+		String[] temps = n1.split(",");
+		int[] output = new int[temps.length];
+		
+		for(int i = 0; i < temps.length; i++) {
+			System.out.println("Element: " + temps[i]);
+			temps[i].replaceAll(" ", "");
+			output[i] = Integer.parseInt(temps[i]);
 		}
+		
+		
+		
 		return output;
 	}
 	
 	public static void outputArray(int[] array) {
-		for(int i = 0; i < array.length; i++) {
-			System.out.println(array[i]);
+		
+		System.out.print("{" + array[0]);
+		for(int i = 1; i < array.length; i++) {
+			System.out.print(", " + array[i]);
 		}
+		System.out.println("}");
+		
 	}
 }
