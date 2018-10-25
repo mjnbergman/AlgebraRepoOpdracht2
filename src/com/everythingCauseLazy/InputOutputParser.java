@@ -38,7 +38,7 @@ public class InputOutputParser {
 			
 			String line = null;
 			
-			int radix = -1;
+			int degree = 0;
 			int modulus = 0;
 			String poly1 = "";
 			String poly2 = "";
@@ -46,7 +46,7 @@ public class InputOutputParser {
 			String operation = "";
 			
 			// Regex to match the required functions
-			String operatorMatchPattern = "\\[(add-poly|subtract-poly|multiply-poly|long-div-poly|equals-poly-mod|euclid-poly|reduce)\\]";
+			String operatorMatchPattern = "\\[(add-poly|subtract-poly|multiply-poly|long-div-poly|equals-poly-mod|euclid-poly|irreducible|find-irred)\\]";
 			
 		    while ((line = bf.readLine()) != null) {
      
@@ -55,6 +55,10 @@ public class InputOutputParser {
 		        	
 		        	// Extract the radius from the string
 		        	modulus = Integer.parseInt(line.substring(line.indexOf("[mod] ") + "[mod] ".length()));
+		        }
+		        else if(line.indexOf("[deg] ") != -1) {        	
+		        	// Extract the degree from the string
+		        	degree = Integer.parseInt(line.substring(line.indexOf("[deg] {") + "[deg] {".length(), line.indexOf("}")));
 		        }
 		        else if(line.indexOf("[f] ") != -1) {
 		        	poly1 = line.substring(line.indexOf("[f] ") + "[f] ".length());
@@ -79,6 +83,7 @@ public class InputOutputParser {
 			//System.out.println("Het tweede getal is: " + poly3);
 			System.out.println("De modulus is: " + modulus);
 			System.out.println("De operatie is: " + operation);
+			System.out.println("De degree is: " + degree);
 			
 			System.out.println("{1, 0, 0}");
 			outputArray(BigPolyCalculator.reverseInt(new int[] {1, 0, 0}));
@@ -152,6 +157,21 @@ public class InputOutputParser {
 					outputArray(otttt[1]);
 					System.out.println("En de y is: ");
 					outputArray(otttt[2]);
+					
+					break;
+				case "irreducible":
+					
+					boolean ottttt = BigPolyCalculator.testIrreducible(stringToArray(poly1), modulus);
+					System.out.println("De polynimals zijn equal mod poly3: " + ottttt);
+					
+					break;
+				case "find-irred":
+					
+					int[] otttttt = BigPolyCalculator.findRandomIrreduciblePoly(degree, modulus);
+					System.out.println("De random gevonden irreducible polynomial is: ");
+					outputArray(otttttt);
+					boolean otBool = BigPolyCalculator.testIrreducible(otttttt, modulus);
+					System.out.println("En even een snelle irreducibility check!\n" + otBool);
 					
 					break;
 				}

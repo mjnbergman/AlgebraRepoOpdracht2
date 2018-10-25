@@ -205,11 +205,11 @@ public class BigPolyCalculator {
 			
 			int oDegree = output.length - (lcDegree2 - lcDegree) - 1;
 			
-			System.out.println("De place to be is : " + oDegree + " want het verschil in degrees is " + (lcDegree2 - lcDegree));
+	//		System.out.println("De place to be is : " + oDegree + " want het verschil in degrees is " + (lcDegree2 - lcDegree));
 			
 			output[oDegree] += Math.floorDiv(lc1, lc2);
 			
-			System.out.println("Long division de vermenigvuldiging is " + Math.floorDiv(lc1, lc2) + "x^" + (lcDegree2 - lcDegree));
+	//		System.out.println("Long division de vermenigvuldiging is " + Math.floorDiv(lc1, lc2) + "x^" + (lcDegree2 - lcDegree));
 			
 			for(int i = 0; i < poly2.length; i++) {
 				
@@ -224,7 +224,7 @@ public class BigPolyCalculator {
 					poly1 = moduloPoly(poly1, mod);
 				}
 				
-				System.out.println("De output index is: " + outputDegree + " en het getal is min " + Math.floorDiv(lc1, lc2) * poly2[i] + " dus de nieuwe coefficient is: " + poly1[outputDegree]);
+	//			System.out.println("De output index is: " + outputDegree + " en het getal is min " + Math.floorDiv(lc1, lc2) * poly2[i] + " dus de nieuwe coefficient is: " + poly1[outputDegree]);
 			}
 			
 			for(int i = 0; i < poly1.length; i++) {
@@ -235,7 +235,7 @@ public class BigPolyCalculator {
 			}
 		
 			degree2 = lcDegree;
-			System.out.println("De nieuwe degrees zijn: " + degree1 + " en " + degree2);
+	//		System.out.println("De nieuwe degrees zijn: " + degree1 + " en " + degree2);
 			
 			if(checkPolyZero(poly1)) {
 				break;
@@ -308,7 +308,7 @@ public class BigPolyCalculator {
 		
 		int[][] polyResult; //= longPolyDivision(biggestPoly.clone(), smallestPoly, mod);
 		
-		System.out.println("Made it");
+	//	System.out.println("Made it");
 		
 		int[] polyQuotient; //= stripLeadingZeroes(polyResult[0]);
 		int[] polyRemainder = biggestPoly; //= stripLeadingZeroes(polyResult[1]);
@@ -355,8 +355,8 @@ public class BigPolyCalculator {
 		
 		while(!checkPolyZero(b)) {
 			
-			System.out.println("Before biggest poly: ");
-			InputOutputParser.outputArray(smallestPoly);
+	//		System.out.println("Before biggest poly: ");
+	//		InputOutputParser.outputArray(smallestPoly);
 			
 			//polySet = sortPolySize(moduloPoly(a, mod), moduloPoly(b, mod));
 			
@@ -374,8 +374,8 @@ public class BigPolyCalculator {
 			a = b;
 			b = polyRemainder;
 			
-			System.out.println("After biggest poly: ");
-			InputOutputParser.outputArray(smallestPoly);
+	//		System.out.println("After biggest poly: ");
+	//		InputOutputParser.outputArray(smallestPoly);
 			
 			xAux = x.clone();
 			yAux = y.clone();
@@ -386,7 +386,7 @@ public class BigPolyCalculator {
 			u = sub(xAux, multiply(polyQuotient, u, mod), mod);			
 			v = sub(yAux, multiply(polyQuotient, v, mod), mod);
 			
-			System.out.println("u: ");
+	/*		System.out.println("u: ");
 			InputOutputParser.outputArray(u);
 			System.out.println("v: ");
 			InputOutputParser.outputArray(v);
@@ -401,12 +401,12 @@ public class BigPolyCalculator {
 			System.out.println("Van: ");
 			InputOutputParser.outputArray(biggestPoly);
 			System.out.println("Van: ");
-			InputOutputParser.outputArray(smallestPoly);
+			InputOutputParser.outputArray(smallestPoly); */
 			
 		}
 		
-		System.out.println("x: ");
-		InputOutputParser.outputArray(x);
+	//	System.out.println("x: ");
+	//	InputOutputParser.outputArray(x);
 		int gcdDegree = 0, gcd = 0;
 		
 		for(int i = 0; i < smallestPoly.length; i++) {
@@ -468,6 +468,20 @@ public class BigPolyCalculator {
 				return false;
 			}
 		}
+		return true;
+	}
+	public static boolean checkPolyOne(int[] poly) {
+		
+		for(int i = 0; i < poly.length - 1; i++) {
+			if(poly[i] != 0) {
+				return false;
+			}
+		}
+		
+		if(poly[poly.length - 1] != 1) {
+			return false;
+		}
+		
 		return true;
 	}
 	public static void outputPolyStyle(int[] poly) {
@@ -553,5 +567,66 @@ public class BigPolyCalculator {
 		return output;
 		
 	}
-
+	public static boolean testIrreducible(int[] poly1, int mod) {
+		
+		int t = 1;
+		int q = mod;
+		
+		int maxDegree = poly1.length - 1;
+		
+		int[] euclidOutput = (polyEuclid(poly1, constructTestPoly(q, t), mod)[0]);
+		
+		System.out.println("De test poly is met " + q + " en " + t + " is: ");
+		InputOutputParser.outputArray(constructTestPoly(q, t));
+		
+		boolean gcdOne = checkPolyOne(euclidOutput);
+		
+		while(gcdOne) {
+			
+			System.out.println("De euclid output is: ");
+			InputOutputParser.outputArray(euclidOutput);
+			
+			t++;
+			euclidOutput = (polyEuclid(poly1, constructTestPoly(q, t), mod)[0]);
+			gcdOne = checkPolyOne(euclidOutput);
+			
+			if(t == maxDegree) {
+				return true;
+			}
+		}
+		return false;
+		
+	}
+	public static int[] constructTestPoly(int q, int t) {
+		
+		int degree = q;
+		
+		for(int i = 1; i < t; i++) {
+			degree *= q;
+		}
+		
+		int[] output = new int[degree + 1];
+		
+		output[0] = 1;
+		output[output.length - 1] = -1;
+		
+		return output;
+		
+	}
+	public static int[] findRandomIrreduciblePoly(int degree, int mod) {
+		
+		while(true) {
+			int[] randomPoly = new int[degree + 1];
+			
+			for(int i = 0; i < degree + 1; i++) {
+				int randomCoefficient = (int)(Math.random() * (mod + 1));
+				randomPoly[i] = randomCoefficient;
+			}
+			
+			if(testIrreducible(randomPoly, mod)) {
+				return randomPoly;
+			}
+		}
+	}
+	
 }
