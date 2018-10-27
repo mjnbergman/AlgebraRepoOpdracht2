@@ -102,6 +102,10 @@ public class InputOutputParser {
 			
 			//try {
 				switch(operation) {
+				case "display-poly":
+					int[] r = BigPolyCalculator.moduloPoly(stringToArray(poly1), modulus);
+					printPoly(r);
+					break;
 				case "add-poly":
 					int[] o = BigPolyCalculator.add(stringToArray(poly1), stringToArray(poly2), modulus);
 					printPoly(o);

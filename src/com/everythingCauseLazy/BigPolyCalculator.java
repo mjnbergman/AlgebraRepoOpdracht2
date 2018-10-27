@@ -69,7 +69,7 @@ public class BigPolyCalculator {
 		}
 		
 		
-		return result;
+		return moduloPoly(result, mod);
 	}
 	
 	public static int[] reverseInt(int[] array) {
