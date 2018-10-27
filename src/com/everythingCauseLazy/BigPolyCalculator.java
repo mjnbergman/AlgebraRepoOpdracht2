@@ -58,6 +58,7 @@ public class BigPolyCalculator {
 		int[] oP1 = pa1;
 		int[] oP2 = pa2;
 		
+		//reverse ints to indent (move by powers of X)
 		int[] p1 = reverseInt(oP1);
 		int[] p2 = reverseInt(oP2);
 		
@@ -67,7 +68,7 @@ public class BigPolyCalculator {
 	//	System.out.println("p1 = " + Arrays.toString(p1));
 	//	System.out.println("p2 = " + Arrays.toString(p2));
 		for(int i = 0; i < p2.length; i++) {
-			int[] currentAdd = new int[p1.length + indent];
+			int[] currentAdd = new int[p1.length + indent]; //indent by powers of X
 			for(int c = 0; c < indent; c++) {
 				currentAdd[c] = 0;
 			}
@@ -97,10 +98,11 @@ public class BigPolyCalculator {
 		System.out.println(" is ");
 		InputOutputParser.outputArray(result);
 		*/
-		return moduloPoly(result,mod);
+		return moduloPoly(result,mod); //return modulated result
 	}
 	
 	public static int[] reverseInt(int[] array) {
+		//reverse array of ints
 		for(int i=0; i<array.length/2; i++){
 			  int temp = array[i];
 			  array[i] = array[array.length -i -1];
@@ -115,7 +117,7 @@ public class BigPolyCalculator {
 		int counter = 0;
 		int index = 0;
 	
-		
+		//A + B = -B + A
 		if(p2.length > p1.length) {
 			
 	//		System.out.println("Ervoor zijn de lengtes " + p2.length + " en " + p1.length);
@@ -432,6 +434,7 @@ public class BigPolyCalculator {
 		
 	}
 	public static int[] moduloPoly(int[] poly, int mod) {
+		//Modulate every coefficient of each power in polynomial by mod
 		
 		int[] output = new int[poly.length];
 		
@@ -549,7 +552,7 @@ public class BigPolyCalculator {
 		}
 	}
 	public static int[] stripLeadingZeroes(int[] poly) {
-		
+		//Remove leading zeroes from array
 		int[] output = new int[0];
 		boolean first = true;
 		int index = 0;
@@ -655,7 +658,7 @@ public class BigPolyCalculator {
 		
 		for(int i = 0; i < tAns.length; i++) {
 			if(tAns[i] < 0) {
-				//tAns[i] += mod;
+				tAns[i] += mod; //Convert negative to positive
 			}
 		}
 		
@@ -673,6 +676,8 @@ public class BigPolyCalculator {
 	}
 	
 	public static int[] fDivision(int[] iP1, int[] iP2, int[] modP, int mod) {
+		
+		//Try to longdivide
 		int[][] tAns = longPolyDivision(iP1, iP2, mod); //multiply polys and get the modulated result back
 		if(testZero(tAns[0])) {
 			//Polynomial could not be divided, so multiply by modP
@@ -687,6 +692,7 @@ public class BigPolyCalculator {
 	}
 	
 	public static int[] displayField(int[] iP1, int[] modP, int mod) {
+		//modulate by number
 		int[] tP1 = moduloPoly(iP1, mod);
 		//modulo the given polynomial
 		int[][] resModPoly = longPolyDivision(tP1, modP, mod);
@@ -696,6 +702,7 @@ public class BigPolyCalculator {
 	}
 	
 	public static int[] inverseField(int[] iP1, int[] modP, int mod) {
+		//Applly euclid to poly and modpoly
 		int[][] tAns = polyEuclid(iP1.clone(), modP.clone(), mod);
 		int[] test = new int[1];
 		test[0] = 1;
@@ -704,7 +711,7 @@ public class BigPolyCalculator {
 		
 		if(!Arrays.equals(stripLeadingZeroes(tAns[0]), test)) {
 			//not invertible
-			System.out.println("Not invertible");
+			//System.out.println("Not invertible");
 			return new int[0];
 		}
 		else {
@@ -712,7 +719,53 @@ public class BigPolyCalculator {
 		}
 	}
 	
+	public static boolean equalsField(int[] iP1, int[] iP2, int[] modP, int mod) {
+		InputOutputParser.printPoly(displayField(iP1, modP, mod));
+		InputOutputParser.printPoly(displayField(iP2, modP, mod));
+		
+		//Check if both have the same Field element
+		return Arrays.equals(stripLeadingZeroes(displayField(iP1, modP, mod)), stripLeadingZeroes(displayField(iP2, modP, mod)));
+	}
+	
+	public static boolean isPrimitiveField(int[] iP1, int[] modP, int mod) {
+		int[] pNums = {2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97}; //prime numbers under 100
+		pNums = Arrays.stream(pNums).filter(x -> (mod - 1) % x == 0).toArray(); //only prime divisors of q - 1
+		boolean prime = true;
+		
+		for(int i = 0; i < pNums.length; i++) {
+			//System.out.print("powpolyfield= ");
+			//InputOutputParser.printPoly(powPolyField(iP1, modP, mod, (mod-1) / pNums[i]));
+			//System.out.print("displayField= ");
+			//InputOutputParser.printPoly(displayField(powPolyField(iP1, modP, mod, (mod-1) / pNums[i]), modP, mod));
+			
+			//Check if the a^((q-1)/p) == 1
+			if(Arrays.equals(stripLeadingZeroes(displayField(powPolyField(iP1, modP, mod, (mod-1) / pNums[i]), modP, mod)), new int[] {1})) {
+				prime = false;
+				break;
+			}
+		}
+		return prime;
+	}
+	
+	public static int[] powPolyField(int[] iP1, int[] modP, int mod, int pow) {
+		//Polynomial ^ pow = poly * poly ... * poly
+		if(pow == 0) {
+			return new int[] {1};
+		}
+		int[] tAns = multiply(iP1, iP1, mod);
+		for(int i = 0; i < pow - 1; i++) {
+			tAns = multiply(tAns, iP1, mod);
+		}
+		
+		//modulo the given polynomial
+		int[][] resModPoly = longPolyDivision(tAns, modP, mod);
+		int[] result = resModPoly[1];
+		
+		return result;
+	}
+	
 	public static boolean testZero (int[] num) {
+		//Test whether a polynomial array consists of only zeroes (zero polynomial)
 		boolean zero = true;
 		for(int i = 0; i < num.length; i++) {
 			if(num[i] != 0) {

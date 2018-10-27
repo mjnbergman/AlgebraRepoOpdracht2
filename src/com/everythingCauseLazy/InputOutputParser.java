@@ -48,8 +48,10 @@ public class InputOutputParser {
 			String polyA = "";
 			String polyB = "";
 			
+			String answer = "[answer] ";
+			
 			// Regex to match the required functions
-			String operatorMatchPattern = "\\[(add-poly|subtract-poly|multiply-poly|long-div-poly|equals-poly-mod|euclid-poly|irreducible|find-irred|add-field|subtract-field|multiply-field|division-field|inverse-field|display-field)\\]";
+			String operatorMatchPattern = "\\[(add-poly|subtract-poly|multiply-poly|long-div-poly|equals-poly-mod|euclid-poly|irreducible|find-irred|add-field|subtract-field|multiply-field|division-field|inverse-field|display-field|equals-field|primitive|find-prim)\\]";
 			
 		    while ((line = bf.readLine()) != null) {
      
@@ -128,98 +130,139 @@ public class InputOutputParser {
 			// Also catches any exceptions caused by for instance a digit in one of the input number being
 			// bigger than the radix.
 			
-			//try {
+			try {
 				switch(operation) {
 				case "display-poly":
 					int[] r = BigPolyCalculator.moduloPoly(stringToArray(poly1), modulus);
-					printPoly(r);
+					answer += printPoly(r);
 					break;
 				case "add-poly":
 					int[] o = BigPolyCalculator.add(stringToArray(poly1), stringToArray(poly2), modulus);
-					printPoly(o);
+					answer += printPoly(o);
 					break;
 				case "multiply-poly":
 					int[] p = BigPolyCalculator.multiply(stringToArray(poly1), stringToArray(poly2), modulus);
-					printPoly(p);
+					answer += printPoly(p);
 					break;
 				case "subtract-poly":
 					int[] ot = BigPolyCalculator.sub(stringToArray(poly1), stringToArray(poly2), modulus);
-					printPoly(ot);
+					answer += printPoly(ot);
 					break;
 				case "long-div-poly":
 					int[][] ott = BigPolyCalculator.longPolyDivision(stringToArray(poly1), stringToArray(poly2), modulus);
-					printPoly(ott[0]);
-					System.out.println("En de remainder: ");
-					printPoly(ott[1]);
+					answer = "[answ-q] " + printPoly(ott[0]) + "\r\n";
+					//System.out.println("En de remainder: ");
+					answer += "[answ-r] " + printPoly(ott[1]);
 					
 					break;
 				case "equals-poly-mod":
 					
 					boolean ottt = BigPolyCalculator.equalsPolyMod(stringToArray(poly1), stringToArray(poly2), stringToArray(poly3), modulus);
-					System.out.println("De polynimals zijn equal mod poly3: " + ottt);
+					//System.out.println("De polynimals zijn equal mod poly3: " + ottt);
+					if(ottt) {
+						answer += "TRUE";
+					}
+					else {
+						answer += "FALSE";
+					}
 					
 					break;
 				case "euclid-poly":
 					
 					int[][] otttt = BigPolyCalculator.polyEuclid(stringToArray(poly1), stringToArray(poly2), modulus);
-					System.out.println("De GCD van ");
+					//System.out.println("De GCD van ");
 				//	outputArray(stringToArray(poly1));
-					BigPolyCalculator.outputPolyStyle(stringToArray(poly1));
-					System.out.println(" en ");
-					BigPolyCalculator.outputPolyStyle(stringToArray(poly2));
-					System.out.println(" is: ");
-					outputArray(otttt[0]);
-					System.out.println("En de x is: ");
-					outputArray(otttt[1]);
-					System.out.println("En de y is: ");
-					outputArray(otttt[2]);
+				//	BigPolyCalculator.outputPolyStyle(stringToArray(poly1));
+				//	System.out.println(" en ");
+				//	BigPolyCalculator.outputPolyStyle(stringToArray(poly2));
+				//	System.out.println(" is: ");
+				//	outputArray(otttt[0]);
+				//	System.out.println("En de x is: ");
+				//	outputArray(otttt[1]);
+				//	System.out.println("En de y is: ");
+				//	outputArray(otttt[2]);
+					answer = "[answ-a] " + printPoly(otttt[1]) + "\r\n[answ-b] " +  printPoly(otttt[2]) + "\r\n[answ-d] " + printPoly(otttt[0]);
 					
 					break;
 				case "irreducible":
 					
 					boolean ottttt = BigPolyCalculator.testIrreducible(stringToArray(poly1), modulus);
-					System.out.println("De polynimals zijn equal mod poly3: " + ottttt);
-					
+					//System.out.println("De polynimals zijn equal mod poly3: " + ottttt);
+					if(ottttt) {
+						answer += "TRUE";
+					}
+					else {
+						answer += "FALSE";
+					}
 					break;
 				case "find-irred":
-					
 					int[] otttttt = BigPolyCalculator.findRandomIrreduciblePoly(degree, modulus);
-					System.out.println("De random gevonden irreducible polynomial is: ");
-					outputArray(otttttt);
-					boolean otBool = BigPolyCalculator.testIrreducible(otttttt, modulus);
-					System.out.println("En even een snelle irreducibility check!\n" + otBool);
+					//System.out.println("De random gevonden irreducible polynomial is: ");
+					answer += printPoly(otttttt);
+					//boolean otBool = BigPolyCalculator.testIrreducible(otttttt, modulus);
+					//System.out.println("En even een snelle irreducibility check!\n" + otBool);
 					
 					break;
 				case "add-field":
 					int[] ok = BigPolyCalculator.fAdd(stringToArray(polyA), stringToArray(polyB), stringToArray(modPoly), modulus);
-					printPoly(ok);
+					answer += printPoly(ok);
 					break;
 				case "subtract-field":
 					int[] okk =  BigPolyCalculator.fSub(stringToArray(polyA), stringToArray(polyB), stringToArray(modPoly), modulus);
-					printPoly(okk);
+					answer +=  printPoly(okk);
 					break;
 				case "multiply-field":
 					int[] okkk =  BigPolyCalculator.fMultiply(stringToArray(polyA), stringToArray(polyB), stringToArray(modPoly), modulus);
-					printPoly(okkk);
+					answer +=  printPoly(okkk);
 					break;
 				case "division-field":
-					int[] op = BigPolyCalculator.fDivision(stringToArray(polyA), stringToArray(polyB), stringToArray(modPoly), modulus);
-					printPoly(op);
+					if(BigPolyCalculator.stripLeadingZeroes(stringToArray(polyB)) == new int[] {0}) {
+						answer += "ERROR";
+					}
+					else {
+						int[] op = BigPolyCalculator.fDivision(stringToArray(polyA), stringToArray(polyB), stringToArray(modPoly), modulus);
+						answer += printPoly(op);
+					}
+					break;
 				case "display-field":
 					int[] opp = BigPolyCalculator.displayField(stringToArray(polyA), stringToArray(modPoly), modulus);
-					printPoly(opp);
+					answer += printPoly(opp);
 					break;
 				case "inverse-field":
 					int[] oppp = BigPolyCalculator.inverseField(stringToArray(polyA), stringToArray(modPoly), modulus);
-					printPoly(oppp);
+					if(oppp.length == 0) {
+						answer += "ERROR";
+					}
+					else {
+						answer += printPoly(oppp);
+					}
+					break;
+				case "equals-field":
+					boolean ob = BigPolyCalculator.equalsField(stringToArray(polyA), stringToArray(polyB), stringToArray(modPoly), modulus);
+					if(ob) {
+						answer += "TRUE";
+					}
+					else {
+						answer += "FALSE";
+					}
+					break;
+				case "primitive":
+					boolean obb = BigPolyCalculator.isPrimitiveField(stringToArray(polyA), stringToArray(modPoly), modulus);
+					if(obb) {
+						answer += "TRUE";
+					}
+					else {
+						answer += "FALSE";
+					}
 					break;
 				}
-			//}catch(Exception ex) {
+			}catch(Exception ex) {
 				//System.out.println("ERROR! " + ex);
 				//error = true;
-			//}	
+				System.out.println("ERROR");
+			}	
 			
-			//this.outputData(pod, error);
+			this.outputData(answer);
 			
 				
 		} catch(IOException ex) {
@@ -233,18 +276,22 @@ public class InputOutputParser {
 	 * An output data function, outputs the data in the specified format
 	 * TODO: ADD the ans-a, ans-b and ans-d output lines.
 	 */
-	public void outputData(ParsedOutputData pod, boolean error) {
+	public void outputData(String answer) {
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter("output.txt"))) {
-
-			String ansString = "[answer] " + (error ? "ERROR" : pod.getAnswer());
-			String countAddString = "[count-add] " + BigPolyCalculator.ADD_COUNT;
-			String countMulString = "[count-mul] " + BigPolyCalculator.MUL_COUNT;
-
-			bw.write(ansString);
-			bw.newLine();
-			bw.write(countAddString);
-			bw.newLine();
-			bw.write(countMulString);
+			BufferedReader bf = openFileFromString("input.txt");
+			String line = null;
+			while ((line = bf.readLine()) != null) {
+				bw.write(line);
+				bw.newLine();
+			}
+			if(answer != null) {
+				bw.write(answer);
+			}
+			
+			//bw.newLine();
+			//bw.write(countAddString);
+			//bw.newLine();
+			//bw.write(countMulString);
 			
 			// no need to close it.
 			//bw.close();
@@ -289,7 +336,7 @@ public class InputOutputParser {
 		
 	}
 	
-	public static void printPoly(int[] poly) {
+	public static String printPoly(int[] poly) {
 		String result = "";
 		int degree = poly.length - 1;
 		for(int i = 0; i < poly.length; i++) {
@@ -318,5 +365,6 @@ public class InputOutputParser {
 			result = "0";
 		}
 		System.out.println(result);
+		return result;
 	}
 }

@@ -1,3 +1,6 @@
-[answer] ERROR
-[count-add] null
-[count-mul] null
+[mod] 3
+[mod-poly] {1,0,2,1}
+[a] {1,1}
+[b] {1,2}
+[multiply-field]
+[answer] X^2+2
