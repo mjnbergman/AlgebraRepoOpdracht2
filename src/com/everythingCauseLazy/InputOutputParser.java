@@ -44,9 +44,12 @@ public class InputOutputParser {
 			String poly2 = "";
 			String poly3 = "";
 			String operation = "";
+			String modPoly = "";
+			String polyA = "";
+			String polyB = "";
 			
 			// Regex to match the required functions
-			String operatorMatchPattern = "\\[(add-poly|subtract-poly|multiply-poly|long-div-poly|equals-poly-mod|euclid-poly|irreducible|find-irred)\\]";
+			String operatorMatchPattern = "\\[(add-poly|subtract-poly|multiply-poly|long-div-poly|equals-poly-mod|euclid-poly|irreducible|find-irred|add-field|subtract-field|multiply-field|division-field|inverse-field|display-field)\\]";
 			
 		    while ((line = bf.readLine()) != null) {
      
@@ -68,6 +71,15 @@ public class InputOutputParser {
 		        }
 		        else if(line.indexOf("[h] ") != -1) {
 		        	poly3 = line.substring(line.indexOf("[h] ") + "[h] ".length());
+		        }
+		        else if(line.indexOf("[a] ") != -1) {
+		        	polyA = line.substring(line.indexOf("[a] ") + "[a] ".length());
+		        }
+		        else if(line.indexOf("[b] ") != -1) {
+		        	polyB = line.substring(line.indexOf("[b] ") + "[b] ".length());
+		        }
+		        else if(line.indexOf("[mod-poly] ") != -1) {
+		        	modPoly = line.substring(line.indexOf("[mod-poly] ") + "[mod-poly] ".length());
 		        }
 		        // If this line matches the regex, AKA it's the line specifying the function
 		        else if(line.matches(operatorMatchPattern)) {
@@ -178,6 +190,25 @@ public class InputOutputParser {
 					System.out.println("En even een snelle irreducibility check!\n" + otBool);
 					
 					break;
+				case "add-field":
+					int[] ok = BigPolyCalculator.fAdd(stringToArray(polyA), stringToArray(polyB), stringToArray(modPoly), modulus);
+					printPoly(ok);
+					break;
+				case "subtract-field":
+					int[] okk =  BigPolyCalculator.fSub(stringToArray(polyA), stringToArray(polyB), stringToArray(modPoly), modulus);
+					printPoly(okk);
+					break;
+				case "multiply-field":
+					int[] okkk =  BigPolyCalculator.fMultiply(stringToArray(polyA), stringToArray(polyB), stringToArray(modPoly), modulus);
+					printPoly(okkk);
+					break;
+				case "division-field":
+					int[] op = BigPolyCalculator.fDivision(stringToArray(polyA), stringToArray(polyB), stringToArray(modPoly), modulus);
+					printPoly(op);
+				case "display-field":
+					int[] opp = BigPolyCalculator.displayField(stringToArray(polyA), stringToArray(modPoly), modulus);
+					printPoly(opp);
+					break;
 				}
 			//}catch(Exception ex) {
 				//System.out.println("ERROR! " + ex);
@@ -260,10 +291,10 @@ public class InputOutputParser {
 		for(int i = 0; i < poly.length; i++) {
 			if(poly[i] != 0) {
 				if(i != 0) {
-					if(poly[i] < 0) {
+					if(poly[i] < 0 && result != "") {
 						result += "-";
 					}
-					else {
+					else if(result != ""){
 						result += "+";
 					}
 				}

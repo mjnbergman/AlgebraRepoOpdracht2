@@ -1,11 +1,4 @@
-<<<<<<< HEAD
-[mod] 37
-[f] {0,0,0,0}
-[g] {2,3,1}
-[multiply]
-=======
-[mod] 7
-[deg] {2}
-[find-irred]
-
->>>>>>> 5d67781015b2974182def96789e717b65ca32f44
+[mod] 5
+[mod-poly] {1,0,2}
+[a] {1,0,0}
+[display-field]

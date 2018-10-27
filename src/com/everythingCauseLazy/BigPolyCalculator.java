@@ -8,18 +8,21 @@ public class BigPolyCalculator {
 	public static final String MUL_COUNT = null;
 	
 	
-	public static int[] add(int[] p1, int[] p2, int mod) {
+	public static int[] add(int[] oP1, int[] oP2, int mod) {
 		
 		int counter = 0;
 		int index = 0;
+		int[] p1;
+		int[] p2;
 	
 		//System.out.println("De lengtes zijn " + p1.length + " en " + p2.length) ;
-		if(p2.length > p1.length) {
-			int[] p3 = p1;
-			p1 = p2;
-			p2 = p3;
-			
-			
+		if(oP2.length > oP1.length) {
+			p1 = oP2.clone();
+			p2 = oP1.clone();
+		}
+		else {
+			p1 = oP1.clone();
+			p2 = oP2.clone();
 		}
 		
 		counter = Math.abs(p1.length - p2.length);
@@ -94,7 +97,7 @@ public class BigPolyCalculator {
 		System.out.println(" is ");
 		InputOutputParser.outputArray(result);
 		*/
-		return result;
+		return moduloPoly(result,mod);
 	}
 	
 	public static int[] reverseInt(int[] array) {
@@ -155,8 +158,8 @@ public class BigPolyCalculator {
 	}
 	public static int[][] longPolyDivision(int[] pody1, int[] pody2, int mod) {
 		
-		int[] poly1 = pody1;
-		int[] poly2 = pody2;
+		int[] poly1 = stripLeadingZeroes(pody1.clone());
+		int[] poly2 = stripLeadingZeroes(pody2.clone());
 		
 		int degree1 = poly1.length - 1;
 		int degree2 = poly2.length - 1;
@@ -627,4 +630,75 @@ public class BigPolyCalculator {
 		}
 	}
 	
+	public static int[] fAdd(int[] iP1, int[] iP2, int[] modP, int mod) {
+		int[] tAns = add(iP1, iP2, mod); //add polys and get the modulated result back
+		
+		//modulo the given polynomial
+		int[][] resModPoly = longPolyDivision(tAns, modP, mod);
+		int[] result = resModPoly[1];
+		
+		return result;
+	}
+	public static int[] fSub(int[] iP1, int[] iP2, int[] modP, int mod) {
+		//a - b = -b + a
+		int[] tP1 = iP1.clone();
+		int[] tP2 = new int[iP2.length];
+		
+		for(int i = 0; i < iP2.length; i++) {
+			tP2[i] = -1 * iP2[i];
+		}
+		int[] tAns = fAdd(tP1, tP2, modP, mod);
+		
+		for(int i = 0; i < tAns.length; i++) {
+			if(tAns[i] < 0) {
+				//tAns[i] += mod;
+			}
+		}
+		
+		return tAns;
+	}
+	
+	public static int[] fMultiply(int[] iP1, int[] iP2, int[] modP, int mod) {
+		int[] tAns = multiply(iP1, iP2, mod); //multiply polys and get the modulated result back
+		
+		//modulo the given polynomial
+		int[][] resModPoly = longPolyDivision(tAns, modP, mod);
+		int[] result = resModPoly[1];
+		
+		return result;
+	}
+	
+	public static int[] fDivision(int[] iP1, int[] iP2, int[] modP, int mod) {
+		int[][] tAns = longPolyDivision(iP1, iP2, mod); //multiply polys and get the modulated result back
+		if(testZero(tAns[0])) {
+			//Polynomial could not be divided, so multiply by modP
+			int[] tP1 = multiply(iP1, modP, mod);
+			tAns = longPolyDivision(tP1, iP2, mod);
+		};
+		//modulo the given polynomial
+		int[][] resModPoly = longPolyDivision(tAns[0], modP, mod);
+		int[] result = resModPoly[1];
+		
+		return result;
+	}
+	
+	public static int[] displayField(int[] iP1, int[] modP, int mod) {
+		int[] tP1 = moduloPoly(iP1, mod);
+		//modulo the given polynomial
+		int[][] resModPoly = longPolyDivision(tP1, modP, mod);
+		int[] result = resModPoly[1];
+		
+		return result;
+	}
+	
+	public static boolean testZero (int[] num) {
+		boolean zero = true;
+		for(int i = 0; i < num.length; i++) {
+			if(num[i] != 0) {
+				zero = false;
+				break;
+			}
+		}
+		return zero;
+	}
 }
