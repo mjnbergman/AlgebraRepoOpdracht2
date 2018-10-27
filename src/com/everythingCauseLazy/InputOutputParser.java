@@ -122,9 +122,7 @@ public class InputOutputParser {
 			
 
 			
-			
-			// Pre-define a ParsedOutputDataObject for further use
-			ParsedOutputData pod = new ParsedOutputData();
+
 			
 			// Switch over the operation, calling the appropriate static function in the BigPolyCalculator class
 			// Also catches any exceptions caused by for instance a digit in one of the input number being

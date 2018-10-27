@@ -8,6 +8,9 @@ public class BigPolyCalculator {
 	public static final String MUL_COUNT = null;
 	
 	
+	
+	// Sander Cauberg
+	// Function that adds two numbers together, represented in the standard array format
 	public static int[] add(int[] oP1, int[] oP2, int mod) {
 		
 		int counter = 0;
@@ -25,6 +28,7 @@ public class BigPolyCalculator {
 			p2 = oP2.clone();
 		}
 		
+		// Counter is used to denote the difference in digit length between the two numbers
 		counter = Math.abs(p1.length - p2.length);
 		int output[] = new int[p1.length];
 		
@@ -32,6 +36,7 @@ public class BigPolyCalculator {
 			
 			int tDigit = 0;
 
+			// Two prevent out of bound errors, if one number is smaller than another take all the missing digits as zero
 			if(counter > 0) {
 				tDigit = 0;
 				counter--;
@@ -50,7 +55,10 @@ public class BigPolyCalculator {
 		return moduloPoly(output, mod);
 	}
 	
-	
+	// Guy Puts
+	// This function multiplies two numbers.
+	// This just uses a standard multiplication algorithm, the only problem is that the numbers need to be 
+	// multiplied in reverse because we need to add zeroes.
 	public static int[] multiply(int[] pa1, int[] pa2, int mod) {
 		int indent = 0;
 		int[] result = new int[pa1.length + pa2.length - 1];
@@ -101,6 +109,8 @@ public class BigPolyCalculator {
 		return moduloPoly(result,mod); //return modulated result
 	}
 	
+	// Dustin Bessems
+	// Utility function that reverses the input array
 	public static int[] reverseInt(int[] array) {
 		//reverse array of ints
 		for(int i=0; i<array.length/2; i++){
@@ -111,7 +121,8 @@ public class BigPolyCalculator {
 		return array;
 	}
 	
-	
+	// Sander Cauberg
+	// Function that subtracts two numbers, very similar to the earlier add function
 	public static int[] sub(int[] p1, int[] p2, int mod) {
 		
 		int counter = 0;
@@ -158,6 +169,9 @@ public class BigPolyCalculator {
 		
 		return moduloPoly(output, mod);
 	}
+	// Maiko Bergman
+	// Function that carries out polynomial long division
+	// Outputs a two dimensional array, the first index contains the quotient of the result, the second index the remainder
 	public static int[][] longPolyDivision(int[] pody1, int[] pody2, int mod) {
 		
 		int[] poly1 = stripLeadingZeroes(pody1.clone());
@@ -258,6 +272,10 @@ public class BigPolyCalculator {
 		
 		return returnable;
 	}
+	
+	// Rick Stolk
+	// Function that checks whether two polynomials are equal modulo a third polynomial.
+	// Utilises the long poly division function two check this
 	public static boolean equalsPolyMod(int[] poly1, int[] poly2, int[] polyMod, int modulus) {
 		
 		int[] moddedPoly1 = moduloPoly(poly1, modulus);
@@ -300,6 +318,11 @@ public class BigPolyCalculator {
 		}
 		return true;
 	}
+	
+	// Maiko Bergman
+	// Function that executes euclids extended algorithm.
+	// Outputs a two dimensional array, the first index contains the gcd, the second the x value and the third the y value
+	// in the equation x * poly1 + y * poly2 = gcd
 	public static int[][] polyEuclid(int[] iPoly1, int[] iPoly2, int mod) {
 		
 		int[] poly1 = moduloPoly(iPoly1.clone(), mod);
@@ -433,6 +456,9 @@ public class BigPolyCalculator {
 		return new int[][] {smallestPoly.clone(), x.clone(), y.clone()};
 		
 	}
+	
+	// Sander Cauberg
+	// Function that calculates the modulus of a given polynomial
 	public static int[] moduloPoly(int[] poly, int mod) {
 		//Modulate every coefficient of each power in polynomial by mod
 		
@@ -447,6 +473,10 @@ public class BigPolyCalculator {
 		
 		return output;
 	}
+	
+	// Sander Cauberg
+	// Utility function that sorts the polynomials by size, was heavily used in earlier versions but serves mostly legacy purposes now.
+	// The output of this function is an array, where output[0] is the biggest polynomial (by digit length) and output[1] the smallest polynomial
 	public static int[][] sortPolySize(int[] poly1, int[] poly2){
 		if(poly1.length > poly2.length) {
 			return new int[][] {poly1, poly2};
@@ -466,6 +496,9 @@ public class BigPolyCalculator {
 		
 		return new int[][] {poly1, poly2};
 	}
+	
+	// Guy Puts
+	// A function that simply checks whether a polynomial is zero or not, outputs the result
 	public static boolean checkPolyZero(int[] poly) {
 		for(int i = 0; i < poly.length; i++) {
 			if(poly[i] != 0) {
@@ -474,6 +507,9 @@ public class BigPolyCalculator {
 		}
 		return true;
 	}
+	
+	// Guy Puts
+	// A function that does the same as above but for 1 instead of zero
 	public static boolean checkPolyOne(int[] poly) {
 		
 		for(int i = 0; i < poly.length - 1; i++) {
@@ -488,6 +524,9 @@ public class BigPolyCalculator {
 		
 		return true;
 	}
+	
+	// Dustin Bessems
+	// A function that outputs the polynomial in the 'ax^n + bx^(n - 1) ... + c' style
 	public static void outputPolyStyle(int[] poly) {
 		
 		int startIndex = 0;
@@ -551,6 +590,9 @@ public class BigPolyCalculator {
 			}
 		}
 	}
+	
+	// Guy Puts 
+	// A utility function that strips the leading zeroes from numbers.
 	public static int[] stripLeadingZeroes(int[] poly) {
 		//Remove leading zeroes from array
 		int[] output = new int[0];
@@ -575,6 +617,11 @@ public class BigPolyCalculator {
 		return output;
 		
 	}
+	
+	// Guy Puts
+	// A function that tests whether a given input polynomial is reducible or not, 
+	// outputs whether this is the case
+	// Uses the algorithm described in the report
 	public static boolean testIrreducible(int[] poly1, int mod) {
 		
 		int t = 1;
@@ -605,6 +652,9 @@ public class BigPolyCalculator {
 		return false;
 		
 	}
+	
+	// Maiko Bergman
+	// A utility function that constructs a polynomial 1 * x^(degree) + 1 for a degree q^t and outputs this
 	public static int[] constructTestPoly(int q, int t) {
 		
 		int degree = q;
@@ -621,6 +671,9 @@ public class BigPolyCalculator {
 		return output;
 		
 	}
+	
+	// Rick Stolk
+	// Function that brute force finds a random irreducible polynomial. Just uses the algorithm from the reader
 	public static int[] findRandomIrreduciblePoly(int degree, int mod) {
 		
 		while(true) {
@@ -637,6 +690,8 @@ public class BigPolyCalculator {
 		}
 	}
 	
+	// Sander Cauberg
+	// A function that adds two field polynomials. Uses long poly division and normal poly addition
 	public static int[] fAdd(int[] iP1, int[] iP2, int[] modP, int mod) {
 		int[] tAns = add(iP1, iP2, mod); //add polys and get the modulated result back
 		
@@ -646,6 +701,9 @@ public class BigPolyCalculator {
 		
 		return result;
 	}
+	
+	// Guy Puts
+	// A function that subtracts two field polynomials, algorithm is very straightforward
 	public static int[] fSub(int[] iP1, int[] iP2, int[] modP, int mod) {
 		//a - b = -b + a
 		int[] tP1 = iP1.clone();
@@ -665,6 +723,8 @@ public class BigPolyCalculator {
 		return tAns;
 	}
 	
+	// Dustin Bessems
+	// Function that multiplies two field polynomials
 	public static int[] fMultiply(int[] iP1, int[] iP2, int[] modP, int mod) {
 		int[] tAns = multiply(iP1, iP2, mod); //multiply polys and get the modulated result back
 		
@@ -675,6 +735,8 @@ public class BigPolyCalculator {
 		return result;
 	}
 	
+	// Rick Stolk
+	// Function that divides two field polynomials
 	public static int[] fDivision(int[] iP1, int[] iP2, int[] modP, int mod) {
 		
 		//Try to longdivide
@@ -691,6 +753,8 @@ public class BigPolyCalculator {
 		return result;
 	}
 	
+	// Dustin Bessems
+	// Function that displays a field in the format described in the assignment
 	public static int[] displayField(int[] iP1, int[] modP, int mod) {
 		//modulate by number
 		int[] tP1 = moduloPoly(iP1, mod);
@@ -701,6 +765,8 @@ public class BigPolyCalculator {
 		return result;
 	}
 	
+	// Maiko Bergman
+	// Function that calculates the inverse of a poly in a field
 	public static int[] inverseField(int[] iP1, int[] modP, int mod) {
 		//Applly euclid to poly and modpoly
 		int[][] tAns = polyEuclid(iP1.clone(), modP.clone(), mod);
@@ -719,6 +785,8 @@ public class BigPolyCalculator {
 		}
 	}
 	
+	// Dustin Bessems
+	// Function that checks whether two fields are equal
 	public static boolean equalsField(int[] iP1, int[] iP2, int[] modP, int mod) {
 		InputOutputParser.printPoly(displayField(iP1, modP, mod));
 		InputOutputParser.printPoly(displayField(iP2, modP, mod));
@@ -727,6 +795,8 @@ public class BigPolyCalculator {
 		return Arrays.equals(stripLeadingZeroes(displayField(iP1, modP, mod)), stripLeadingZeroes(displayField(iP2, modP, mod)));
 	}
 	
+	// Sander Cauberg
+	// Function that checkes whether polynomial is a primitive
 	public static boolean isPrimitiveField(int[] iP1, int[] modP, int mod) {
 		int[] pNums = {2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97}; //prime numbers under 100
 		pNums = Arrays.stream(pNums).filter(x -> (mod - 1) % x == 0).toArray(); //only prime divisors of q - 1
@@ -747,6 +817,8 @@ public class BigPolyCalculator {
 		return prime;
 	}
 	
+	// Rick Stolk
+	// Function that calculates the value of a polynomial to a certain power
 	public static int[] powPolyField(int[] iP1, int[] modP, int mod, int pow) {
 		//Polynomial ^ pow = poly * poly ... * poly
 		if(pow == 0) {
@@ -764,6 +836,10 @@ public class BigPolyCalculator {
 		return result;
 	}
 	
+	
+	// Dustin Bessems
+	// I was stubborn so decided to write my own zero test function and push it.
+	// Does the same as above
 	public static boolean testZero (int[] num) {
 		//Test whether a polynomial array consists of only zeroes (zero polynomial)
 		boolean zero = true;
