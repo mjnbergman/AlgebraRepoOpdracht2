@@ -38,7 +38,7 @@ public class InputOutputParser {
 			
 			String line = null;
 			
-			int radix = -1;
+			int degree = 0;
 			int modulus = 0;
 			String poly1 = "";
 			String poly2 = "";
@@ -46,7 +46,7 @@ public class InputOutputParser {
 			String operation = "";
 			
 			// Regex to match the required functions
-			String operatorMatchPattern = "\\[(add-poly|subtract-poly|multiply|long-div-poly|equals-poly-mod|inverse|reduce)\\]";
+			String operatorMatchPattern = "\\[(add-poly|subtract-poly|multiply-poly|long-div-poly|equals-poly-mod|euclid-poly|irreducible|find-irred)\\]";
 			
 		    while ((line = bf.readLine()) != null) {
      
@@ -55,6 +55,10 @@ public class InputOutputParser {
 		        	
 		        	// Extract the radius from the string
 		        	modulus = Integer.parseInt(line.substring(line.indexOf("[mod] ") + "[mod] ".length()));
+		        }
+		        else if(line.indexOf("[deg] ") != -1) {        	
+		        	// Extract the degree from the string
+		        	degree = Integer.parseInt(line.substring(line.indexOf("[deg] {") + "[deg] {".length(), line.indexOf("}")));
 		        }
 		        else if(line.indexOf("[f] ") != -1) {
 		        	poly1 = line.substring(line.indexOf("[f] ") + "[f] ".length());
@@ -79,6 +83,18 @@ public class InputOutputParser {
 			//System.out.println("Het tweede getal is: " + poly3);
 			System.out.println("De modulus is: " + modulus);
 			System.out.println("De operatie is: " + operation);
+			System.out.println("De degree is: " + degree);
+			
+			System.out.println("{1, 0, 0}");
+			outputArray(BigPolyCalculator.reverseInt(new int[] {1, 0, 0}));
+			System.out.println("{1, 0, 0, 1}");
+			outputArray(BigPolyCalculator.reverseInt(new int[] {1, 0, 0, 1}));
+			System.out.println("{1, 1, 0}");
+			outputArray(BigPolyCalculator.reverseInt(new int[] {1, 1, 0}));
+			System.out.println("{1, 2, 3}");
+			outputArray(BigPolyCalculator.reverseInt(new int[] {1, 2, 3}));
+			System.out.println("{1, 2, 3, 4, 5, 6, 7, 8}");
+			outputArray(BigPolyCalculator.reverseInt(new int[] {1, 2, 3, 4, 5, 6, 7, 8}));
 			
 			//System.out.print("De array vorm van getal 1 is: ");
 		//	outputArray(stringToArray(poly1));
@@ -110,7 +126,7 @@ public class InputOutputParser {
 					int[] o = BigPolyCalculator.add(stringToArray(poly1), stringToArray(poly2), modulus);
 					printPoly(o);
 					break;
-				case "multiply":
+				case "multiply-poly":
 					int[] p = BigPolyCalculator.multiply(stringToArray(poly1), stringToArray(poly2), modulus);
 					printPoly(p);
 					break;
@@ -127,8 +143,39 @@ public class InputOutputParser {
 					break;
 				case "equals-poly-mod":
 					
-					boolean ottt = BigPolyCalculator.equalsPolyMod(stringToArray(poly1), stringToArray(poly2), stringToArray(poly3));
+					boolean ottt = BigPolyCalculator.equalsPolyMod(stringToArray(poly1), stringToArray(poly2), stringToArray(poly3), modulus);
 					System.out.println("De polynimals zijn equal mod poly3: " + ottt);
+					
+					break;
+				case "euclid-poly":
+					
+					int[][] otttt = BigPolyCalculator.polyEuclid(stringToArray(poly1), stringToArray(poly2), modulus);
+					System.out.println("De GCD van ");
+				//	outputArray(stringToArray(poly1));
+					BigPolyCalculator.outputPolyStyle(stringToArray(poly1));
+					System.out.println(" en ");
+					BigPolyCalculator.outputPolyStyle(stringToArray(poly2));
+					System.out.println(" is: ");
+					outputArray(otttt[0]);
+					System.out.println("En de x is: ");
+					outputArray(otttt[1]);
+					System.out.println("En de y is: ");
+					outputArray(otttt[2]);
+					
+					break;
+				case "irreducible":
+					
+					boolean ottttt = BigPolyCalculator.testIrreducible(stringToArray(poly1), modulus);
+					System.out.println("De polynimals zijn equal mod poly3: " + ottttt);
+					
+					break;
+				case "find-irred":
+					
+					int[] otttttt = BigPolyCalculator.findRandomIrreduciblePoly(degree, modulus);
+					System.out.println("De random gevonden irreducible polynomial is: ");
+					outputArray(otttttt);
+					boolean otBool = BigPolyCalculator.testIrreducible(otttttt, modulus);
+					System.out.println("En even een snelle irreducibility check!\n" + otBool);
 					
 					break;
 				}
@@ -180,23 +227,31 @@ public class InputOutputParser {
 		//System.out.println("n1 first = " + n1.replaceAll("\\{", "").replaceAll("\\}", ""));
 		n1 = n1.replaceAll("\\{", "").replaceAll("\\}", "");
 		//System.out.println("output length = " + (int) Math.ceil((n1.length())/2.0));
-		int[] output = new int[(int)Math.ceil((n1.length())/2.0)];
+		
 		int index = 0;
 		
-		for(int i = 0; i < n1.length(); i++) {
-			if(n1.charAt(i) != ',' && n1.charAt(i) != ' ') {
-				//System.out.println("n1.charAt = " + n1.charAt(i) + " and output[i] = " + (int) (n1.charAt(i) - 48));
-				output[index] = (int) n1.charAt(i) - 48;
-				index++;
-			}
+		String[] temps = n1.split(",");
+		int[] output = new int[temps.length];
+		
+		for(int i = 0; i < temps.length; i++) {
+	//		System.out.println("Element: " + temps[i]);
+			temps[i].replaceAll(" ", "");
+			output[i] = Integer.parseInt(temps[i]);
 		}
+		
+		
+		
 		return output;
 	}
 	
 	public static void outputArray(int[] array) {
-		for(int i = 0; i < array.length; i++) {
-			System.out.println(array[i]);
+		
+		System.out.print("{" + array[0]);
+		for(int i = 1; i < array.length; i++) {
+			System.out.print(", " + array[i]);
 		}
+		System.out.println("}");
+		
 	}
 	
 	public static void printPoly(int[] poly) {
