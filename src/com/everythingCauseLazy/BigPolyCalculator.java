@@ -298,10 +298,10 @@ public class BigPolyCalculator {
 		}
 		return true;
 	}
-	public static int[][] polyEuclid(int[] poly1, int[] poly2, int mod) {
+	public static int[][] polyEuclid(int[] iPoly1, int[] iPoly2, int mod) {
 		
-		poly1 = moduloPoly(poly1, mod);
-		poly2 = moduloPoly(poly2, mod);
+		int[] poly1 = moduloPoly(iPoly1.clone(), mod);
+		int[] poly2 = moduloPoly(iPoly2.clone(), mod);
 		
 		int[][] polySet = sortPolySize(poly1, poly2);
 		int[] biggestPoly = stripLeadingZeroes(polySet[0]);
@@ -565,6 +565,10 @@ public class BigPolyCalculator {
 			}
 		}
 		
+		if(output.length == 0) {
+			output = new int[1];
+		}
+		
 		return output;
 		
 	}
@@ -689,6 +693,23 @@ public class BigPolyCalculator {
 		int[] result = resModPoly[1];
 		
 		return result;
+	}
+	
+	public static int[] inverseField(int[] iP1, int[] modP, int mod) {
+		int[][] tAns = polyEuclid(iP1.clone(), modP.clone(), mod);
+		int[] test = new int[1];
+		test[0] = 1;
+		InputOutputParser.outputArray(tAns[0]);
+		InputOutputParser.outputArray(test);
+		
+		if(!Arrays.equals(stripLeadingZeroes(tAns[0]), test)) {
+			//not invertible
+			System.out.println("Not invertible");
+			return new int[0];
+		}
+		else {
+			return fAdd(tAns[1],modP,modP, mod);
+		}
 	}
 	
 	public static boolean testZero (int[] num) {

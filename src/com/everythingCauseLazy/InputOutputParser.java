@@ -97,16 +97,16 @@ public class InputOutputParser {
 			System.out.println("De operatie is: " + operation);
 			System.out.println("De degree is: " + degree);
 			
-			System.out.println("{1, 0, 0}");
-			outputArray(BigPolyCalculator.reverseInt(new int[] {1, 0, 0}));
-			System.out.println("{1, 0, 0, 1}");
-			outputArray(BigPolyCalculator.reverseInt(new int[] {1, 0, 0, 1}));
-			System.out.println("{1, 1, 0}");
-			outputArray(BigPolyCalculator.reverseInt(new int[] {1, 1, 0}));
-			System.out.println("{1, 2, 3}");
-			outputArray(BigPolyCalculator.reverseInt(new int[] {1, 2, 3}));
-			System.out.println("{1, 2, 3, 4, 5, 6, 7, 8}");
-			outputArray(BigPolyCalculator.reverseInt(new int[] {1, 2, 3, 4, 5, 6, 7, 8}));
+			//System.out.println("{1, 0, 0}");
+			//outputArray(BigPolyCalculator.reverseInt(new int[] {1, 0, 0}));
+			//System.out.println("{1, 0, 0, 1}");
+			//outputArray(BigPolyCalculator.reverseInt(new int[] {1, 0, 0, 1}));
+			//System.out.println("{1, 1, 0}");
+			//outputArray(BigPolyCalculator.reverseInt(new int[] {1, 1, 0}));
+			//System.out.println("{1, 2, 3}");
+			//outputArray(BigPolyCalculator.reverseInt(new int[] {1, 2, 3}));
+			//System.out.println("{1, 2, 3, 4, 5, 6, 7, 8}");
+			//outputArray(BigPolyCalculator.reverseInt(new int[] {1, 2, 3, 4, 5, 6, 7, 8}));
 			
 			//System.out.print("De array vorm van getal 1 is: ");
 		//	outputArray(stringToArray(poly1));
@@ -208,6 +208,10 @@ public class InputOutputParser {
 				case "display-field":
 					int[] opp = BigPolyCalculator.displayField(stringToArray(polyA), stringToArray(modPoly), modulus);
 					printPoly(opp);
+					break;
+				case "inverse-field":
+					int[] oppp = BigPolyCalculator.inverseField(stringToArray(polyA), stringToArray(modPoly), modulus);
+					printPoly(oppp);
 					break;
 				}
 			//}catch(Exception ex) {
